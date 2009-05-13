@@ -3,7 +3,7 @@ require "rubygems"
 require "sinatra"
 
 get '/' do
-	@repositories = [".", "../glitch.git"]
+	@repositories = ["."]
 	erb :repositories
 end
 
