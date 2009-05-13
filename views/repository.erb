@@ -2,6 +2,6 @@
 
 <ul>
 <% repository.branches.each do |branch| %>
-	<li><a href="/repos/<%= repository.name %>/<%= branch.name %>"><%= branch.name %></a> — <%= branch.commit.message %></li>
+	<li><a href="/repos/<%= repository.name %>/branches/<%= branch.name %>"><%= branch.name %></a> — <%= branch.commit.message %></li>
 <% end %>
 </ul>

@@ -46,10 +46,18 @@ get '/repos/:name/?$' do |name|
 	erb :repository, :locals => {:repository => Grit::Repo.new("#{repo_root}/#{name}")}
 end
 
-get '/repos/:name/:branch/?$' do |name, branch|
+get '/repos/:name/branches/:branch/?$' do |name, branch|
 	halt 404, "No such repository" unless is_valid_repo?(name)
 	@repository = Grit::Repo.new("#{repo_root}/#{name}")
 	@branch = @repository.get_head(branch)
 	halt 404, "No such branch" unless @branch
 	erb :branch
+end
+
+get '/repos/:name/commits/:hash' do |name, hash|
+	halt 404, "No such repository" unless is_valid_repo?(name)
+	@repository = Grit::Repo.new("#{repo_root}/#{name}")
+	@commit = @repository.commit(hash)
+	halt 404, "No such commit" unless @commit
+	erb :commit
 end
