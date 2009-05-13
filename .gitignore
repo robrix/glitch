@@ -1,2 +1,6 @@
 .DS_Store
 *.tmproj
+thin.yaml
+log
+tmp
+Rakefile

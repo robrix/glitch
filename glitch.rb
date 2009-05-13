@@ -1,15 +1,27 @@
 #!/usr/bin/env ruby -rubygems
 require "rubygems"
 require "sinatra"
+require "grit"
 
-REPOSITORIES_ROOT = "/var/repositories"
-REPOSITORIES = ["*"]
+helpers do
+	def repo_root
+		ENV["GLITCH_REPO_ROOT"] || "/var/repositories"
+	end
+	
+	def repos
+		ENV["GLITCH_REPOS"] || "*"
+	end
+end
 
 get '/' do
-	@repositories = REPOSITORIES.collect{ |repo| Dir.glob("#{REPOSITORIES_ROOT}/#{repo}") }.flatten
+	@repositories = repos.collect do |repo|
+		Dir.glob("#{repo_root}/#{repo}").select do |dir|
+			dir[/.git$/] or File.exists?("#{dir}/.git")
+		end
+	end.flatten
 	erb :repositories
 end
 
-get '/repositories/:name' do |name|
-	erb :repository, :locals => {:repository => Grit::Repo.new("#{REPOSITORIES_ROOT}/#{name}")}
+get '/repos/:name' do |name|
+	erb :repository, :locals => {:repository => Grit::Repo.new("#{repo_root}/#{name}")}
 end

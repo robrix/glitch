@@ -1,8 +1,14 @@
 <ul>
-<%=
-require "grit"
+<%
 @repositories.collect do |repo|
-	erb :repository, :locals => {:repository => Grit::Repo.new(repo)}
-end.join("\n")
+	repository = Grit::Repo.new(repo)
+	head = repository.commits.first
+	name = File.basename((File.basename(repository.path) == ".git") ? repository.working_dir : repository.path)
+%>
+<li>
+	<a href="/repos/<%= name %>"><%= name %></a>
+</li>
+<%
+end
 %>
 </ul>
