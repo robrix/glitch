@@ -1,6 +1,6 @@
 <ul>
 <%
-@repositories.collect do |repo|
+repos.collect do |repo|
 	repository = Grit::Repo.new(repo)
 	head = repository.commits.first
 	name = File.basename((File.basename(repository.path) == ".git") ? repository.working_dir : repository.path)
