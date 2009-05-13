@@ -25,7 +25,7 @@ helpers do
 	end
 end
 
-get '/' do
+get %r{/(repos)?$} do
 	erb :repositories
 end
 
