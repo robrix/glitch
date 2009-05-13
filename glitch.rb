@@ -9,7 +9,7 @@ helpers do
 	end
 	
 	def repos
-		ENV["GLITCH_REPOS"] ? ENV["GLITCH_REPOS"].split(":") || ["*"]
+		ENV["GLITCH_REPOS"] ? ENV["GLITCH_REPOS"].split(":") : ["*"]
 	end
 	
 	@repositories = repos.collect do |repo|
