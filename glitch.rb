@@ -6,7 +6,7 @@ REPOSITORIES_ROOT = "/var/repositories"
 REPOSITORIES = ["*"]
 
 get '/' do
-	@repositories = [REPOSITORIES.collect{ |repo| Dir.glob("#{REPOSITORIES_ROOT}/#{repo}") }.flatten]
+	@repositories = REPOSITORIES.collect{ |repo| Dir.glob("#{REPOSITORIES_ROOT}/#{repo}") }.flatten
 	erb :repositories
 end
 
