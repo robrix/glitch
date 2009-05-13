@@ -1,0 +1,8 @@
+<ul>
+<%=
+require "grit"
+@repositories.collect do |repo|
+	erb :repository, :locals => {:repository => Grit::Repo.new(repo)}
+end.join("\n")
+%>
+</ul>

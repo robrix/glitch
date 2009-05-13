@@ -1,0 +1,7 @@
+<%
+head = repository.commits.first
+name = File.basename((File.basename(repository.path) == ".git") ? repository.working_dir : repository.path)
+%>
+<li>
+	<a href="/repositories/<%= name %>"><%= name %></a>
+</li>
