@@ -7,7 +7,7 @@ repos.collect do |repo|
 	name = File.basename((File.basename(repository.path) == ".git") ? repository.working_dir : repository.path)
 %>
 <li>
-	<a href="/repos/<%= name %>"><%= name %></a>
+	<a href="/repos/<%= name %>"><%= name %></a> — <%= repository.commits.first.message %>
 </li>
 <%
 end

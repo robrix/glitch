@@ -1,10 +1,7 @@
-<%
-name = File.basename((File.basename(repository.path) == ".git") ? repository.working_dir : repository.path)
-%>
-<h1><%=name%></h1>
+<h1><%=repository.name%> branches</h1>
 
 <ul>
-<% repository.commits.each do |commit| %>
-	<li><%= commit.message %></li>
+<% repository.branches.each do |branch| %>
+	<li><a href="/repos/<%= repository.name %>/<%= branch.name %>"><%= branch.name %></a> — <%= branch.commit.message %></li>
 <% end %>
 </ul>

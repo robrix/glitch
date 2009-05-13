@@ -25,11 +25,31 @@ helpers do
 	end
 end
 
+before do
+	headers "Content-Type" => "text/html; charset=utf-8"
+end
+
+module Grit
+	class Repo
+		def name
+			@name ||= File.basename((File.basename(self.path) == ".git") ? self.working_dir : self.path)
+		end
+	end
+end
+
 get %r{/(repos)?$} do
 	erb :repositories
 end
 
-get '/repos/:name' do |name|
-	halt 403, "Forbidden" unless is_valid_repo?(name)
+get '/repos/:name/?$' do |name|
+	halt 404, "No such repository" unless is_valid_repo?(name)
 	erb :repository, :locals => {:repository => Grit::Repo.new("#{repo_root}/#{name}")}
+end
+
+get '/repos/:name/:branch/?$' do |name, branch|
+	halt 404, "No such repository" unless is_valid_repo?(name)
+	@repository = Grit::Repo.new("#{repo_root}/#{name}")
+	@branch = @repository.get_head(branch)
+	halt 404, "No such branch" unless @branch
+	erb :branch
 end
