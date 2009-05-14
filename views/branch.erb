@@ -12,7 +12,7 @@ count = @repository.commit_count(@branch.name)
 <% @repository.commits(@branch.name, step, params[:offset]).each do |commit| %>
 	<li>
 		<p><a href="/repos/<%= @repository.name %>/commits/<%= commit.id_abbrev %>"><%= commit.id_abbrev %></a>, <%= relative_time(commit.date) %>:</p>
-		<p><%= commit.message %></p>
+		<p><%= commit.message.gsub(/\n/, "<br>\n") %></p>
 	</li>
 <% end %>
 </ul>
