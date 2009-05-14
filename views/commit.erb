@@ -2,14 +2,22 @@
 
 <dl>
 	<dt>Author:</dt>
-	<dd><%= @commit.author %></dd>
+	<dd>
+		<p><%= @commit.author %></p>
+	</dd>
 	
 	<dt>Date:</dt>
-	<dd><%= @commit.date %></dd>
+	<dd>
+		<p><%= @commit.date %> (<%= relative_time(@commit.date) %>)</p>
+	</dd>
 	
 	<dt>Message:</dt>
-	<dd><%= @commit.message.gsub(/\n/, "<br>\n") %></dd>
+	<dd>
+		<p><%= @commit.message.gsub(/\n/, "<br>\n") %></p>
+	</dd>
 	
 	<dt>ID:</dt>
-	<dd><%= @commit.id %></dd>
+	<dd>
+		<p><%= @commit.id %></p>
+	</dd>
 </dl>

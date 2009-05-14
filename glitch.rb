@@ -23,6 +23,49 @@ helpers do
 	def is_valid_repo?(name)
 		repo_names.include?("*") || repo_names.include?(name)
 	end
+	
+	def quantity(n, noun, plural_noun = nil)
+		n.to_s + " " + if n == 1
+			noun
+		else
+			plural_noun || "#{noun}s"
+		end
+	end
+
+	def relative_time(time)
+		seconds = (Time.now - time).to_i
+		minutes = (seconds / 60).round
+		hours = (minutes / 60).round
+		days = (hours / 24).round
+		months = (days / 30).round
+		years = (months / 12).round
+		
+		if years == 0
+			if months == 0
+				if days == 0
+					if hours == 0
+						if minutes == 0
+							if seconds == 0
+								"now! How did you do that?"
+							else
+								"#{quantity(seconds, "second")} ago"
+							end
+						else
+							"about #{quantity(minutes, "minute")} ago"
+						end
+					else
+						"about #{quantity(hours, "hour")} ago"
+					end
+				else
+					"about #{quantity(days, "day")} ago"
+				end
+			else
+				"about #{quantity(months, "month")} ago"
+			end
+		else
+			"about #{quantity(years, "year")} ago"
+		end
+	end
 end
 
 before do

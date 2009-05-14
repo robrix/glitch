@@ -7,7 +7,8 @@ repos.collect do |repo|
 	name = File.basename((File.basename(repository.path) == ".git") ? repository.working_dir : repository.path)
 %>
 <li>
-	<a href="/repos/<%= name %>"><%= name %></a> — <%= repository.commits.first.message %>
+	<p><a href="/repos/<%= name %>"><%= name %></a>, last updated <%= relative_time(repository.commits.first.date) %>:</p>
+	<p><%= repository.commits.first.message %></p>
 </li>
 <%
 end
