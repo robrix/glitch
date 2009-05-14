@@ -1,5 +1,7 @@
 <%
-step = 25
+step = params[:step].to_i
+step = 10 unless step > 0
+offset = params[:offset].to_i
 count = @repository.commit_count(@branch.name)
 %>
 <h1><a href="/repos/<%= @repository.name %>"><%= @repository.name %></a>/<%= @branch.name %> commits</h1>
@@ -16,13 +18,13 @@ count = @repository.commit_count(@branch.name)
 </ul>
 
 <p>
-<% unless params[:offset].to_i - step < 0 %>
-	<a href="?offset=0">&lt;&lt;</a>
-	<a href="?offset=<%= params[:offset].to_i - step %>">&lt;</a>
+<% if offset > 0 %>
+	<a href="?offset=0&amp;step=<%= step %>">&lt;&lt;</a>
+	<a href="?offset=<%= [offset - step, 0].max %>&amp;step=<%= step %>">&lt;</a>
 <% end %>
-	Showing commits <%= (params[:offset].to_i || 0) + 1 %> to <%= [params[:offset].to_i + step, count].min %> of <%= count %>.
-<% unless params[:offset].to_i + step > count %>
-	<a href="?offset=<%= params[:offset].to_i + step %>">&gt;</a>
-	<a href="?offset=<%= (count / step).to_i * step %>">&gt;&gt;</a>
+	Showing commits <%= (offset || 0) + 1 %> to <%= [offset + step, count].min %> of <%= count %>.
+<% unless offset + step > count %>
+	<a href="?offset=<%= offset + step %>&amp;step=<%= step %>">&gt;</a>
+	<a href="?offset=<%= (count / step).to_i * step %>&amp;step=<%= step %>">&gt;&gt;</a>
 <% end %>
 </p>
