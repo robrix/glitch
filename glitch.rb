@@ -4,6 +4,8 @@ require "sinatra"
 require "grit"
 
 helpers do
+	include Rack::Utils
+	
 	def repo_root
 		@repo_root ||= ENV["GLITCH_REPO_ROOT"] || "/var/repositories"
 	end
