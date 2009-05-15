@@ -4,7 +4,7 @@
 <% @repo.branches.each do |branch|
 	commit = @repo.commits(branch.name, 1).first %>
 	<li>
-		<p><a href="/<%= @repo.name %>/branches/<%= branch.name %>"><%= branch.name %></a>, last updated <%= relative_time(commit.date) %>:</p>
+		<p><a href="/<%= escape @repo.name %>/branches/<%= branch.name %>"><%= branch.name %></a>, last updated <%= relative_time(commit.date) %>:</p>
 		<p><%= commit.message.gsub(/\n/, "<br>\n") %></p>
 	</li>
 <% end %>
