@@ -6,7 +6,7 @@
 %>
 <li>
 	<p><a href="/<%= escape repo.name %>"><%= repo.name %></a>, last updated <%= relative_time(repo.commits.first.date) %>:</p>
-	<p><%= repo.commits.first.message.gsub(/\n/, "<br>\n") %></p>
+	<p><%= escape_html(repo.commits.first.message).gsub(/\n/, "<br>\n") %></p>
 </li>
 <%
 end
