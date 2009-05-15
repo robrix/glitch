@@ -1,10 +1,10 @@
-<h1><%=repository.name%> branches</h1>
+<h1><%= @repo.name %> branches</h1>
 
 <ul>
-<% repository.branches.each do |branch|
-	commit = repository.commits(branch.name, 1).first %>
+<% @repo.branches.each do |branch|
+	commit = @repo.commits(branch.name, 1).first %>
 	<li>
-		<p><a href="/repos/<%= repository.name %>/branches/<%= branch.name %>"><%= branch.name %></a>, last updated <%= relative_time(commit.date) %>:</p>
+		<p><a href="/<%= @repo.name %>/branches/<%= branch.name %>"><%= branch.name %></a>, last updated <%= relative_time(commit.date) %>:</p>
 		<p><%= commit.message.gsub(/\n/, "<br>\n") %></p>
 	</li>
 <% end %>

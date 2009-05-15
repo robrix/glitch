@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<%
+step = params[:step].to_i
+step = 10 unless step > 0
+offset = params[:offset].to_i
+count = @repo.commit_count(@branch.name)
+
+latest_commit_date = @repo.commits(@branch.name, 1).first.date
+earliest_commit_date = @repo.commits(@branch.name, 1, @repo.commit_count(@branch.name) - 1).last.date
+base = request.env["rack.url_scheme"] + "://" + request.env["HTTP_HOST"] + File.dirname(request.path_info)
+%>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:base="<%= base %>">
+	<title><%= @repo.name %>/<%= @branch.name %> commits</title>
+	<link href="<%= base %>/<%= @branch.name %>.xml" rel="self"/>
+	<link href="<%= base %>/<%= @branch.name %>"/>
+	<generator>glitch</generator>
+	<updated><%= latest_commit_date.strftime("%Y-%m-%dT%H:%M:%SZ") %></updated>
+	<id>tag:<%= request.env["SERVER_NAME"] %>,<%= earliest_commit_date.strftime("%Y-%m-%d") %>:<%= @repo.name %>/<%= @branch.name %>/commits-feed</id>
+<% @repo.commits(@branch.name, step, offset).each do |commit| %>
+	<entry>
+		<title><%= @repo.name %>/<%= commit.id_abbrev %></title>
+		<link href="<%= base.chomp File.dirname(request.path_info) %>/<%= @repo.name %>/commits/<%= commit.id_abbrev %>"/>
+		<id>tag:<%= request.env["SERVER_NAME"] %>,<%= commit.date.strftime("%Y-%m-%d") %>:<%= @repo.name %>/commits/<%= commit.id_abbrev %></id>
+		<updated><%= commit.date.strftime("%Y-%m-%dT%H:%M:%SZ") %></updated>
+		<content type="html"><![CDATA[<%= commit.message.gsub(/\n/, "<br>\n") %>]]></content>
+		<author>
+			<name><%= commit.author.name %></name>
+			<email><%= commit.author.email %></email>
+		</author>
+	</entry>
+<%
+end
+%>
+</feed>

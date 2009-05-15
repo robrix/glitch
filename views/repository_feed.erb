@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<%
+latest_commit_date = @repo.branches.collect{ |branch| @repo.commits(branch.name, 1).first.date }.sort.last
+earliest_commit_date = @repo.branches.collect{ |branch| @repo.commits(branch.name, 1, @repo.commit_count(branch.name) - 1).last.date }.sort.first
+base = request.env["rack.url_scheme"] + "://" + request.env["HTTP_HOST"] + File.dirname(request.path_info)
+%>
+<feed xmlns="http://www.w3.org/2005/Atom">
+	<title><%= @repo.name %> branches</title>
+	<link href="<%= base %><%= @repo.name %>.xml" rel="self"/>
+	<link href="<%= base %><%= @repo.name %>"/>
+	<generator>glitch</generator>
+	<updated><%= latest_commit_date.strftime("%Y-%m-%dT%H:%M:%SZ") %></updated>
+	<id>tag:<%= request.env["SERVER_NAME"] %>,<%= earliest_commit_date.strftime("%Y-%m-%d") %>:<%= @repo.name %>/branches-feed</id>
+<%
+@repo.branches.each do |branch|
+	head = @repo.commits(branch.name, 1).first
+	tail = @repo.commits(branch.name, 1, @repo.commit_count(branch.name) - 1).last
+%>
+	<entry>
+		<title><%= branch.name %></title>
+		<link href="<%= base %><%= @repo.name %>/branches/<%= branch.name %>"/>
+		<id>tag:<%= request.env["SERVER_NAME"] %>,<%= tail.date.strftime("%Y-%m-%d") %>:<%= @repo.name %>/branches/<%= branch.name %>/<%= tail.id %></id>
+		<updated><%= head.date.strftime("%Y-%m-%dT%H:%M:%SZ") %></updated>
+		<content type="html"><![CDATA[<%= head.message.gsub(/\n/, "<br>\n") %>]]></content>
+		<author>
+			<name><%= head.author.name %></name>
+			<email><%= head.author.email %></email>
+		</author>
+	</entry>
+<%
+end
+%>
+</feed>

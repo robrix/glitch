@@ -1,14 +1,12 @@
 <h1>Repositories</h1>
 <ul>
 <%
-repos.collect do |repo|
-	repository = Grit::Repo.new(repo)
-	head = repository.commits.first
-	name = File.basename((File.basename(repository.path) == ".git") ? repository.working_dir : repository.path)
+@repos.each do |repo|
+	head = repo.commits.first
 %>
 <li>
-	<p><a href="/repos/<%= name %>"><%= name %></a>, last updated <%= relative_time(repository.commits.first.date) %>:</p>
-	<p><%= repository.commits.first.message.gsub(/\n/, "<br>\n") %></p>
+	<p><a href="/<%= escape repo.name %>"><%= repo.name %></a>, last updated <%= relative_time(repo.commits.first.date) %>:</p>
+	<p><%= repo.commits.first.message.gsub(/\n/, "<br>\n") %></p>
 </li>
 <%
 end

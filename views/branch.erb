@@ -2,16 +2,16 @@
 step = params[:step].to_i
 step = 10 unless step > 0
 offset = params[:offset].to_i
-count = @repository.commit_count(@branch.name)
+count = @repo.commit_count(@branch.name)
 %>
-<h1><a href="/repos/<%= @repository.name %>"><%= @repository.name %></a>/<%= @branch.name %> commits</h1>
+<h1><a href="/<%= @repo.name %>"><%= @repo.name %></a>/<%= @branch.name %> commits</h1>
 
 <p>In reverse chronological order.</p>
 
 <ul>
-<% @repository.commits(@branch.name, step, params[:offset]).each do |commit| %>
+<% @repo.commits(@branch.name, step, offset).each do |commit| %>
 	<li>
-		<p><a href="/repos/<%= @repository.name %>/commits/<%= commit.id_abbrev %>"><%= commit.id_abbrev %></a>, <%= relative_time(commit.date) %>:</p>
+		<p><a href="/<%= @repo.name %>/commits/<%= commit.id_abbrev %>"><%= commit.id_abbrev %></a>, <%= relative_time(commit.date) %>:</p>
 		<p><%= commit.message.gsub(/\n/, "<br>\n") %></p>
 	</li>
 <% end %>

@@ -86,27 +86,48 @@ module Grit
 	end
 end
 
-get %r{/(repos)?$} do
+get "/" do
+	@repos = repos.collect{ |repo| Grit::Repo.new(repo) }
 	erb :repositories
 end
 
-get '/repos/:name/?$' do |name|
-	halt 404, "No such repository" unless is_valid_repo?(name)
-	erb :repository, :locals => {:repository => Grit::Repo.new("#{repo_root}/#{name}")}
+get "/index.xml" do
+	@repos = repos.collect{ |repo| Grit::Repo.new(repo) }
+	erb :repositories_feed, :layout => false
 end
 
-get '/repos/:name/branches/:branch/?$' do |name, branch|
+get "/:name.xml" do |name|
 	halt 404, "No such repository" unless is_valid_repo?(name)
-	@repository = Grit::Repo.new("#{repo_root}/#{name}")
-	@branch = @repository.get_head(branch)
+	@repo = Grit::Repo.new("#{repo_root}/#{name}")
+	erb :repository_feed
+end
+
+get '/:name/?$' do |name|
+	halt 404, "No such repository" unless is_valid_repo?(name)
+	@repo = Grit::Repo.new("#{repo_root}/#{name}")
+	erb :repository
+end
+
+get '/:name/branches/:branch.xml' do |name, branch|
+	halt 404, "No such repository" unless is_valid_repo?(name)
+	@repo = Grit::Repo.new("#{repo_root}/#{name}")
+	@branch = @repo.get_head(branch)
+	halt 404, "No such branch" unless @branch
+	erb :branch_feed
+end
+
+get '/:name/branches/:branch/?$' do |name, branch|
+	halt 404, "No such repository" unless is_valid_repo?(name)
+	@repo = Grit::Repo.new("#{repo_root}/#{name}")
+	@branch = @repo.get_head(branch)
 	halt 404, "No such branch" unless @branch
 	erb :branch
 end
 
-get '/repos/:name/commits/:hash' do |name, hash|
+get '/:name/commits/:hash' do |name, hash|
 	halt 404, "No such repository" unless is_valid_repo?(name)
-	@repository = Grit::Repo.new("#{repo_root}/#{name}")
-	@commit = @repository.commit(hash)
+	@repo = Grit::Repo.new("#{repo_root}/#{name}")
+	@commit = @repo.commit(hash)
 	halt 404, "No such commit" unless @commit
 	erb :commit
 end

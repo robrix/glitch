@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<%
+latest_commit_date = @repos.collect{ |repo| repo.commits.first.date }.sort.last
+earliest_commit_date = @repos.collect{ |repo| repo.commits("master", 1, repo.commit_count - 1).last.date }.sort.first
+base = request.env["rack.url_scheme"] + "://" + request.env["HTTP_HOST"] + File.dirname(request.path_info)
+%>
+<feed xmlns="http://www.w3.org/2005/Atom">
+	<title>Repositories</title>
+	<link href="<%= base %>index.xml" rel="self"/>
+	<link href="<%= base %>"/>
+	<generator>glitch</generator>
+	<updated><%= latest_commit_date.strftime("%Y-%m-%dT%H:%M:%SZ") %></updated>
+	<id>tag:<%= request.env["SERVER_NAME"] %>,<%= earliest_commit_date.strftime("%Y-%m-%d") %>:@repositories-feed</id>
+<%
+@repos.each do |repo|
+	head = repo.commits.first
+	tail = repo.commits("master", 1, repo.commit_count - 1).last
+%>
+	<entry>
+		<title><%= repo.name %></title>
+		<link href="<%= base %><%= escape(repo.name) %>"/>
+		<id>tag:<%= request.env["SERVER_NAME"] %>,<%= tail.date.strftime("%Y-%m-%d") %>:<%= escape(repo.name) %>/<%= tail.id %></id>
+		<updated><%= head.date.strftime("%Y-%m-%dT%H:%M:%SZ") %></updated>
+		<content type="html"><![CDATA[<%= head.message.gsub(/\n/, "<br>\n") %>]]></content>
+		<author>
+			<name><%= head.author.name %></name>
+			<email><%= head.author.email %></email>
+		</author>
+	</entry>
+<%
+end
+%>
+</feed>
