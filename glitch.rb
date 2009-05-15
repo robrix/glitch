@@ -71,7 +71,11 @@ helpers do
 end
 
 before do
-	headers "Content-Type" => "text/html; charset=utf-8"
+	headers "Content-Type" => if request.path_info =~ /\.xml$/
+		"application/atom+xml"
+	else
+		"text/html; charset=utf-8"
+	end
 end
 
 module Grit
