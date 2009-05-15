@@ -28,3 +28,5 @@ count = @repo.commit_count(@branch.name)
 	<a href="?offset=<%= (count / step).to_i * step %>&amp;step=<%= step %>">&gt;&gt;</a>
 <% end %>
 </p>
+
+<link rel="alternate" href="/<%= escape @repo.name %>/branches/<%= escape @branch.name %>.xml" type="application/atom+xml" title="<%= escape_html @repo.name %>/<%= escape_html @branch.name %> commit feed">
