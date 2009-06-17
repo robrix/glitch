@@ -1,9 +1,7 @@
 require "sinatra"
 
-Sinatra::Application.default_options.merge!(
-	:run => false,
-	:env => :production
-)
+Sinatra::Application.set :run, :false
+Sinatra::Application.set :environment, ENV["RACK_ENV"]
 
 require "glitch"
-run Sinatra.application
+run Sinatra::Application
